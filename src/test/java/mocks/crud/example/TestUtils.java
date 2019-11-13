@@ -1,10 +1,9 @@
 package mocks.crud.example;
 
-import mocks.crud.example.Book;
 
-public final class TestUtils {
+final class TestUtils {
 
-    public static final Book TEST_BOOK;
+    static final Book TEST_BOOK;
 
     static {
         TEST_BOOK = new Book();
@@ -12,4 +11,7 @@ public final class TestUtils {
         TEST_BOOK.setAuthor("Lev Tolstoy");
         TEST_BOOK.setName("War and peace");
     }
+
+
+
 }

@@ -6,31 +6,35 @@ import mocks.crud.task.repository.CrudRepository;
 import java.util.List;
 
 public class AddressService implements CrudRepository<Long, Address> {
+    public AddressService(CrudRepository<Long, Address> addressCrudRepository)
+    {
+        this.addressCrudRepository = addressCrudRepository;
+    }
+
+    private CrudRepository<Long, Address> addressCrudRepository;
+
     @Override
     public void save(Address element) {
-        //todo написать реализацию
+        addressCrudRepository.save(element);
     }
 
     @Override
     public Address findById(Long id) {
-        //todo написать реализацию
-        return null;
+        return addressCrudRepository.findById(id);
     }
 
     @Override
     public List<Address> findAll() {
-        //todo написать реализацию
-        return null;
+        return addressCrudRepository.findAll();
     }
 
     @Override
     public Address update(Address element) {
-        //todo написать реализацию
-        return null;
+        return addressCrudRepository.update(element);
     }
 
     @Override
     public void delete(Address element) {
-        //todo написать реализацию
+        addressCrudRepository.delete(element);
     }
 }
