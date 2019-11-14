@@ -40,29 +40,20 @@ public class PersonServiceTest {
 	@Test
 	public void findAllRelatives()
 	{
-		List<Person> personList = new ArrayList<>();
-		personList.add(TEST_PERSON);
-		personList.add(RELATIVE_PERSON);
 		List<Person> relatives = new ArrayList<>();
 		relatives.add(RELATIVE_PERSON);
-		when(personCrudRepository.findAll()).thenReturn(personList);
-		when(addressService.findById(TEST_PERSON.getId())).thenReturn(TEST_ADDRESS);
-		when(addressService.findById(RELATIVE_PERSON.getId())).thenReturn(TEST_ADDRESS);
+		TEST_PERSON.addRelatives(RELATIVE_PERSON);
+		when(personCrudRepository.findById(TEST_PERSON.getId())).thenReturn(TEST_PERSON);
 		List<Person> result = personService.findAllRelatives(TEST_PERSON);
 		assertEquals(result, relatives);
-		verify(addressService, times(personList.size())).findById(anyLong());
 	}
 
 	@Test
 	public void getAddress()
 	{
-		List<Person> personList = new ArrayList<>();
-		personList.add(TEST_PERSON);
-		when(personCrudRepository.findAll()).thenReturn(personList);
 		when(addressService.findById(TEST_PERSON.getAddress().getId())).thenReturn(TEST_ADDRESS);
 		Address result = personService.getAddress(TEST_PERSON);
 		assertEquals(TEST_ADDRESS, result);
-		verify(personCrudRepository, times(1)).findAll();
 		verify(addressService,times(1)).findById(anyLong());
 	}
 
