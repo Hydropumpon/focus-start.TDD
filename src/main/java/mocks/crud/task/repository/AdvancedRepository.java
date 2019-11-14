@@ -19,7 +19,7 @@ public interface AdvancedRepository {
     /**
      * Метод для поиска адреса пользователя
      * @param person человек, адрес которого нужно найти
-     * @return список родственников
+     * @return адрес человека
      */
     Address getAddress(Person person);
 }

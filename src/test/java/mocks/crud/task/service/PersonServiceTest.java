@@ -1,5 +1,6 @@
 package mocks.crud.task.service;
 
+import mocks.crud.task.model.Address;
 import mocks.crud.task.model.Person;
 import mocks.crud.task.repository.CrudRepository;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static mocks.crud.task.service.PersonUtils.*;
+import static mocks.crud.task.service.AddressUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -44,9 +46,11 @@ public class PersonServiceTest {
 		List<Person> relatives = new ArrayList<>();
 		relatives.add(RELATIVE_PERSON);
 		when(personCrudRepository.findAll()).thenReturn(personList);
+		when(addressService.findById(TEST_PERSON.getId())).thenReturn(TEST_ADDRESS);
+		when(addressService.findById(RELATIVE_PERSON.getId())).thenReturn(TEST_ADDRESS);
 		List<Person> result = personService.findAllRelatives(TEST_PERSON);
 		assertEquals(result, relatives);
-		verify(personCrudRepository, times(1)).findAll();
+		verify(addressService, times(personList.size())).findById(anyLong());
 	}
 
 	@Test
@@ -55,9 +59,11 @@ public class PersonServiceTest {
 		List<Person> personList = new ArrayList<>();
 		personList.add(TEST_PERSON);
 		when(personCrudRepository.findAll()).thenReturn(personList);
-		personService.getAddress(TEST_PERSON);
-		assertEquals(TEST_PERSON.getAddress(), personList.get(personList.indexOf(TEST_PERSON)).getAddress());
+		when(addressService.findById(TEST_PERSON.getAddress().getId())).thenReturn(TEST_ADDRESS);
+		Address result = personService.getAddress(TEST_PERSON);
+		assertEquals(TEST_ADDRESS, result);
 		verify(personCrudRepository, times(1)).findAll();
+		verify(addressService,times(1)).findById(anyLong());
 	}
 
 	@Test

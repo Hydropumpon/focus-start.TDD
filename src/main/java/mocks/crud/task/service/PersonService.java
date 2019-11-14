@@ -21,38 +21,34 @@ public class PersonService implements AdvancedRepository
 		this.personRepository = crudRepository;
 	}
 
-	//проверка валидности данных для поиска в репозитории
-	private boolean isPersonDataIncorrect(Person person)
+	private void checkPersonData(Person person) throws NullPointerException, IllegalArgumentException
 	{
 		if (person == null)
 		{
-			return true;
+			throw new NullPointerException("Error, empty person object");
 		}
 		if (person.getAge() == null)
 		{
-			return true;
+			throw new IllegalArgumentException("Error, empty person age");
 		}
-		return person.getName() == null;
+		if (person.getName() == null)
+		{
+			throw new IllegalArgumentException("Error, empty person name");
+		}
 	}
 
 	@Override
 	public List<Person> findAllRelatives(Person person)
 	{
 		List<Person> relatives = new ArrayList<>();
-		//если условия для поиска не соответствуют требуемым
-		if (isPersonDataIncorrect(person))
-		{
-			return relatives;
-		}
+		checkPersonData(person);
 		for (Person p : findAll())
 		{
-			//если найденный в репозитории человек - мы сами, то пропускаем
 			if (p.getAge().equals(person.getAge()) && p.getName().equals(person.getName()))
 			{
 				continue;
 			}
-			//если совпадает адрес - то добавляем в родственников
-			if (p.getAddress().getId().equals(person.getAddress().getId()) && p.getAddress().getAddress().equals(person.getAddress().getAddress()))
+			if (getAddress(person).equals(getAddress(p)))
 			{
 				relatives.add(p);
 			}
@@ -64,17 +60,11 @@ public class PersonService implements AdvancedRepository
 	@Override
 	public Address getAddress(Person person)
 	{
-		if (isPersonDataIncorrect(person))
-		{
-			return null;
-		}
+		checkPersonData(person);
 		for (Person p : findAll())
 		{
-			//если мы нашли человека в репозитории
 			if (p.getName().equals(person.getName()) && (p.getAge().equals(person.getAge())))
-			{
-				return p.getAddress();
-			}
+				return addressService.findById(p.getAddress().getId());
 		}
 		return null;
 	}
